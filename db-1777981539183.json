@@ -1,0 +1,19 @@
+{
+  "options": [
+    {
+      "id": "1",
+      "text": "React",
+      "votes": 5
+    },
+    {
+      "id": "2",
+      "text": "Vue",
+      "votes": 2
+    },
+    {
+      "id": "3",
+      "text": "Angular",
+      "votes": 1
+    }
+  ]
+}

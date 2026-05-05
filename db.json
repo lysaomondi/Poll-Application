@@ -1,0 +1,51 @@
+{
+  "polls": [
+    {
+      "id": 1,
+      "question": "Who should be class representative?",
+      "options": [
+        {
+          "text": "John",
+          "votes": 3
+        },
+        {
+          "text": "Mary",
+          "votes": 2
+        },
+        {
+          "text": "Alex",
+          "votes": 1
+        }
+      ]
+    },
+    {
+      "question": "hey",
+      "options": [
+        {
+          "text": "john",
+          "votes": 3
+        },
+        {
+          "text": "pita",
+          "votes": 1
+        }
+      ],
+      "id": 2
+    },
+    {
+      "question": "mp",
+      "options": [
+        {
+          "text": "leo",
+          "votes": 0
+        },
+        {
+          "text": "lio",
+          "votes": 0
+        }
+      ],
+      "id": 3
+    }
+  ],
+  "options": []
+}
