@@ -6,7 +6,7 @@
       "options": [
         {
           "text": "John",
-          "votes": 3
+          "votes": 7
         },
         {
           "text": "Mary",
@@ -14,7 +14,7 @@
         },
         {
           "text": "Alex",
-          "votes": 1
+          "votes": 2
         }
       ]
     },
@@ -45,6 +45,118 @@
         }
       ],
       "id": 3
+    },
+    {
+      "id": "mp",
+      "question": "mp",
+      "options": [
+        {
+          "text": "lop",
+          "votes": 0
+        },
+        {
+          "text": "lopo",
+          "votes": 0
+        }
+      ]
+    },
+    {
+      "id": "1778064752797",
+      "question": "Vote for your candidate",
+      "options": [
+        {
+          "text": "kiol",
+          "votes": 0
+        }
+      ]
+    },
+    {
+      "id": "1778065018920",
+      "question": "Vote for your candidate",
+      "options": [
+        {
+          "text": "kimani",
+          "votes": 0
+        }
+      ]
+    },
+    {
+      "id": "1778065545341",
+      "question": "Vote for your candidate",
+      "options": [
+        {
+          "text": "pol",
+          "votes": 0
+        }
+      ]
+    },
+    {
+      "id": "1778065552150",
+      "question": "Vote for your candidate",
+      "options": [
+        {
+          "text": "pol",
+          "votes": 0
+        }
+      ]
+    },
+    {
+      "id": "1778065675833",
+      "question": "Vote for your candidate",
+      "options": [
+        {
+          "text": "pol",
+          "votes": 0
+        },
+        {
+          "text": "lop",
+          "votes": 0
+        }
+      ]
+    },
+    {
+      "id": "1778065732600",
+      "question": "Vote for your candidate",
+      "options": [
+        {
+          "text": "pol",
+          "votes": 0
+        },
+        {
+          "text": "pita",
+          "votes": 0
+        }
+      ]
+    },
+    {
+      "id": "1778066690204",
+      "question": "Vote for your candidate",
+      "options": [
+        {
+          "text": "nana",
+          "votes": 0
+        }
+      ]
+    },
+    {
+      "id": "1778066737903",
+      "question": "Vote for your candidate",
+      "options": [
+        {
+          "text": "jonh",
+          "votes": 0
+        }
+      ]
+    },
+    {
+      "id": "1778067416589",
+      "question": "Vote for your candidate",
+      "options": [
+        {
+          "text": "pol",
+          "votes": 0
+        }
+      ]
     }
   ],
   "options": []

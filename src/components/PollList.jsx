@@ -3,135 +3,162 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function PollList() {
-  const [polls, setPolls] = useState([]);
+  const [poll, setPoll] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
+  // 📡 FETCH SINGLE POLL
   useEffect(() => {
-    fetchPolls();
+    fetchPoll();
   }, []);
 
-  const fetchPolls = async () => {
-    const res = await axios.get("http://localhost:3001/polls");
-    setPolls(res.data);
+  const fetchPoll = async () => {
+    try {
+      const res = await axios.get("http://localhost:3001/polls");
+
+      // 👉 take first poll only (your system = single poll)
+      setPoll(res.data[0] || null);
+
+      setError("");
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load poll");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // 🗳️ Vote function
-  const vote = async (pollId, optionIndex) => {
-    const updatedPolls = polls.map((poll) => {
-      if (poll.id === pollId) {
-        const updatedOptions = poll.options.map((opt, i) =>
-          i === optionIndex
-            ? { ...opt, votes: opt.votes + 1 }
-            : opt
-        );
+  // 🗳️ VOTE FUNCTION
+  const vote = async (optionIndex) => {
+    try {
+      if (!poll) return;
 
-        return { ...poll, options: updatedOptions };
-      }
-      return poll;
-    });
+      const updatedOptions = poll.options.map((opt, i) =>
+        i === optionIndex
+          ? { ...opt, votes: opt.votes + 1 }
+          : opt
+      );
 
-    setPolls(updatedPolls);
+      const updatedPoll = {
+        ...poll,
+        options: updatedOptions,
+      };
 
-    const updatedPoll = updatedPolls.find((p) => p.id === pollId);
+      await axios.put(
+        `http://localhost:3001/polls/${poll.id}`,
+        updatedPoll
+      );
 
-    await axios.put(
-      `http://localhost:3001/polls/${pollId}`,
-      updatedPoll
+      setPoll(updatedPoll);
+    } catch (err) {
+      console.error(err);
+      setError("Vote failed");
+    }
+  };
+
+  // ⏳ LOADING
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600">Loading poll...</p>
+      </div>
     );
-  };
+  }
+
+  // 🚫 NO POLL EXISTS
+  if (!poll) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <p className="text-gray-600 mb-4">No poll created yet</p>
+
+        <button
+          onClick={() => navigate("/create")}
+          className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
+        >
+          Create Poll
+        </button>
+      </div>
+    );
+  }
+
+  const totalVotes = poll.options.reduce(
+    (sum, opt) => sum + opt.votes,
+    0
+  );
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4">
-      
-      <div className="max-w-2xl mx-auto">
 
-        {/* Header */}
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-gray-800">
-            Polls 🗳️
-          </h2>
+      <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-md">
 
-          <button
-            onClick={() => navigate("/create")}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
-          >
-            + Create Poll
-          </button>
-        </div>
+        {/* HEADER (NO QUESTION ANYMORE) */}
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+          Vote for Your Candidate 
+        </h2>
 
-        {/* Polls */}
-        <div className="space-y-6">
-          {polls.map((poll) => {
-            const totalVotes = poll.options.reduce(
-              (sum, opt) => sum + opt.votes,
-              0
-            );
+        {error && (
+          <div className="bg-red-100 text-red-600 p-2 rounded mb-4 text-sm">
+            {error}
+          </div>
+        )}
+
+        {/* OPTIONS */}
+        <div className="space-y-4">
+          {poll.options.map((opt, index) => {
+            const percentage =
+              totalVotes === 0
+                ? 0
+                : Math.round((opt.votes / totalVotes) * 100);
 
             return (
               <div
-                key={poll.id}
-                className="bg-white p-6 rounded-2xl shadow-md"
+                key={index}
+                className="border rounded-lg p-4 bg-gray-50"
               >
-                {/* Question */}
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                  {poll.question}
-                </h3>
 
-                {/* Options */}
-                <div className="space-y-3">
-                  {poll.options.map((opt, index) => {
-                    const percentage =
-                      totalVotes === 0
-                        ? 0
-                        : Math.round((opt.votes / totalVotes) * 100);
+                <div className="flex justify-between items-center">
 
-                    return (
-                      <div
-                        key={index}
-                        className="border rounded-lg p-3 bg-gray-50"
-                      >
-                        <div className="flex justify-between items-center">
-                          
-                          {/* Candidate name */}
-                          <span className="text-gray-700 font-medium">
-                            {opt.text}
-                          </span>
+                  {/* Candidate */}
+                  <span className="font-medium text-gray-700">
+                    {opt.text}
+                  </span>
 
-                          {/* Vote button */}
-                          <button
-                            onClick={() => vote(poll.id, index)}
-                            className="bg-green-500 text-white px-3 py-1 rounded-md text-sm hover:bg-green-600 transition"
-                          >
-                            Vote
-                          </button>
-                        </div>
+                  {/* Vote */}
+                  <button
+                    onClick={() => vote(index)}
+                    className="bg-green-500 text-white px-3 py-1 rounded-md text-sm hover:bg-green-600"
+                  >
+                    Vote
+                  </button>
 
-                        {/* Votes + percentage */}
-                        <div className="flex justify-between text-xs text-gray-500 mt-2">
-                          <span>{opt.votes} votes</span>
-                          <span>{percentage}%</span>
-                        </div>
-
-                        {/* Progress bar */}
-                        <div className="w-full bg-gray-200 h-2 rounded mt-1">
-                          <div
-                            className="bg-indigo-500 h-2 rounded"
-                            style={{ width: `${percentage}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    );
-                  })}
                 </div>
 
-                {/* Total votes */}
-                <p className="text-xs text-gray-500 mt-3">
-                  Total votes: {totalVotes}
-                </p>
+                {/* STATS */}
+                <div className="flex justify-between text-xs text-gray-500 mt-2">
+                  <span>{opt.votes} votes</span>
+                  <span>{percentage}%</span>
+                </div>
+
+                {/* PROGRESS BAR */}
+                <div className="w-full bg-gray-200 h-2 rounded mt-2">
+                  <div
+                    className="bg-indigo-500 h-2 rounded"
+                    style={{ width: `${percentage}%` }}
+                  />
+                </div>
+
               </div>
             );
           })}
         </div>
+
+        {/* TOTAL */}
+        <p className="text-center text-sm text-gray-500 mt-6">
+          Total votes: {totalVotes}
+        </p>
+
       </div>
     </div>
   );
